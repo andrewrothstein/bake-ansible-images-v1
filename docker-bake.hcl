@@ -21,10 +21,27 @@ target "default" {
   RUN mkdir -p $TEST_PLAYBOOK_DIR
   ADD . $TEST_PLAYBOOK_DIR
   WORKDIR $TEST_PLAYBOOK_DIR
-  RUN if [ -f requirements.yml ]; then ansible-galaxy install -r requirements.yml; fi
-  RUN if [ -f meta/requirements.yml ]; then ansible-galaxy install -r meta/requirements.yml; fi
-  RUN if [ -f test-requirements.yml ]; then ansible-galaxy install -r test-requirements.yml; fi
-  RUN if [ -f test-inventory.ini ]; then ansible-playbook -i test-inventory.ini test.yml; else ansible-playbook test.yml; fi
+  RUN <<HERE
+  set -ex;
+  if [ -f requirements.yml ];
+  then
+    ansible-galaxy install -r requirements.yml;
+  fi
+  if [ -f meta/requirements.yml ];
+  then
+    ansible-galaxy install -r meta/requirements.yml;
+  fi
+  if [ -f test-requirements.yml ];
+  then
+    ansible-galaxy install -r test-requirements.yml;
+  fi
+  if [ -f test-inventory.ini ];
+  then
+    ansible-playbook -i test-inventory.ini test.yml;
+  else
+    ansible-playbook test.yml;
+  fi
+  HERE
   EOF
   labels = {
     maintainer = "Andrew Rothstein andrew.rothstein@gmail.com"
