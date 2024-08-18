@@ -41,6 +41,7 @@ target "default" {
   else
     ansible-playbook test.yml;
   fi
+  rm -rf .git/
   HERE
   EOF
   labels = {
