@@ -17,6 +17,7 @@ target "default" {
   context = BAKE_CMD_CONTEXT
   dockerfile-inline = <<-EOF
   FROM ${UPSTREAM_REGISTRY}/${UPSTREAM_SLUG}:${UPSTREAM_TAG}
+  SHELL ["/bin/bash", "-l", "-c"]
   ENV TEST_PLAYBOOK_DIR=/test-playbook${SHA}
   RUN mkdir -p $TEST_PLAYBOOK_DIR
   ADD . $TEST_PLAYBOOK_DIR
