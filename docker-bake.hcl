@@ -13,7 +13,7 @@ variable "TARGET_SLUG" {}
 variable "TARGET_TAG" {}
 variable "SHA" {}
 
-target "default" {
+target "base" {
   context = BAKE_CMD_CONTEXT
   dockerfile-inline = <<-EOF
   FROM ${UPSTREAM_REGISTRY}/${UPSTREAM_SLUG}:${UPSTREAM_TAG}
@@ -48,10 +48,22 @@ target "default" {
   labels = {
     maintainer = "Andrew Rothstein andrew.rothstein@gmail.com"
   }
+  tags = [
+    "${TARGET_REGISTRY}/${TARGET_SLUG}:${TARGET_TAG}"
+  ]
+}
+
+target "default" {
+  inherits = ["base"]
   platforms = [
     "linux/amd64"
   ]
-  tags = [
-    "${TARGET_REGISTRY}/${TARGET_SLUG}:${TARGET_TAG}"
+}
+
+target "multiarch" {
+  inherits = ["base"]
+  platforms = [
+    "linux/amd64",
+    "linux/arm64"
   ]
 }
